@@ -12,7 +12,7 @@ if read_only_vars.counter ==1
     public_vars.gnss_buf = []; %init pole pro GPS
 end
 
-%public_vars.motion_vector = [0,0]; %zastavili jsem robota
+public_vars.motion_vector = [0,0]; %zastavili jsem robota
 
 lidar=read_only_vars.lidar_distances;
 gnss = read_only_vars.gnss_position;
@@ -55,23 +55,9 @@ if public_vars.done == 0
         disp("Kovariance gnss: " )
         disp(public_vars.cov_gnss)
 
-        public_vars.sigma_lidar = std(public_vars.lidar_buf,0,1);
-        public_vars.sigma_gnss = std(public_vars.gnss_buf,0,1);
-
         %výpočet gausova rozdělení
         sigmaL=public_vars.sigma_lidar(1);
-        sigmaG=public_vars.sigma_gnss(1);
-
-        xmax=4*max([sigmaL sigmaG eps]);
-        x=linspace (-xmax, xmax, 300);
-
-        figure
-        plot(x, norm_pdf(x,0,sigmaL),"LineWidth",2)
-        hold on
-        plot(x, norm_pdf(x,0,sigmaG),"LineWidth",2)
-        grid on
-        legend("lidar","gnss")
-        title("normální rozdělení")
+        sigmaG=public_vars.sigma_gnss
 
 
     end
