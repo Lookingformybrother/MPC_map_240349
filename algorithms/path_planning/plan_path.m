@@ -2,7 +2,7 @@ function [path] = plan_path(read_only_vars, public_vars)
 %PLAN_PATH Summary of this function goes here
 %tri testosvaci trajektorie: primka, kruhovy oblouk, sinusovka
 %primka
-path_type = 3;
+path_type = 1;
 
 if path_type==1
     x=linspace(2,18,30);
