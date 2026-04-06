@@ -43,7 +43,7 @@ if abs(angle_error)>0.8
     vL=-0.35*sign(angle_error);
 end
 
-public_vars.motion_vector=[vR,vL];
+public_vars.motion_vector=
 
 
 % 
