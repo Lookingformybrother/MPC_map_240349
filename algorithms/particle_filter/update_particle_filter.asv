@@ -16,14 +16,17 @@ for i=1:size(particles, 1)
     x=particles(i,1);
     y=particles(i,2);
 
+
+
     if x<xmin||x>xmax||y<ymin||y>ymax
         particles(i,4)=0;
     end
+
 end
 
 % II. Correction
-measurements = zeros(N, length(read_only_vars.lidar_config));
-for i=1:N
+measurements = zeros(size(particles,1), length(read_only_vars.lidar_config));
+for i=1:size(particles, 1)
     measurements(i,:) = compute_lidar_measurement(read_only_vars.map, particles(i,:), read_only_vars.lidar_config);
 end
 weights = weight_particles(measurements, read_only_vars.lidar_distances);
@@ -48,7 +51,7 @@ end
 
 Neff = 1 / sum(weights.^2);
 
-if Neff < 0.7*N
+if Neff < 0.9*N
     particles = resample_particles(particles, weights);
 else
     particles(:,4) = weights;

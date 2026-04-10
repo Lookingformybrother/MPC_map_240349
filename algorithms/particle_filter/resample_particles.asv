@@ -1,0 +1,15 @@
+function [new_particles] = resample_particles(particles, weights)
+%RESAMPLE_PARTICLES Summary of this function goes here
+
+N= size(particles,1);
+new_particles=zeros(size(particles));
+
+c=cumsum(weights);
+r=rand/N;
+
+i=
+
+new_particles = particles;
+
+end
+

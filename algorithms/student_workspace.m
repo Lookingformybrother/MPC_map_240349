@@ -1,6 +1,14 @@
 function [public_vars] = student_workspace(read_only_vars,public_vars)
 %STUDENT_WORKSPACE Summary of this function goes here
 
+if read_only_vars.counter == 20
+    test_meas = compute_lidar_measurement(read_only_vars.map, read_only_vars.mocap_pose, read_only_vars.lidar_config);
+    disp("Real lidar:")
+    disp(read_only_vars.lidar_distances)
+    disp("Predicted lidar:")
+    disp(test_meas)
+end
+
 % 8. Perform initialization procedure
 if (read_only_vars.counter == 1)
           
@@ -23,6 +31,7 @@ public_vars.path = plan_path(read_only_vars, public_vars);
 
 % 13. Plan next motion command
 public_vars = plan_motion(read_only_vars, public_vars);
+
 
 
 
