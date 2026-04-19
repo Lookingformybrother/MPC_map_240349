@@ -1,14 +1,62 @@
 function [public_vars] = plan_motion(read_only_vars, public_vars)
 %PLAN_MOTION Summary of this function goes here
+%Zde používám kód ze cvičení week_3
 
-% I. Pick navigation target
+pose=public_vars.estimated_pose;   
+path=public_vars.path;
 
-target = get_target(public_vars.estimated_pose, public_vars.path);
+if ~isfield(public_vars, 'target_idx') %inicializace ukazatele na waypoint
+    public_vars.target_idx=1;
+end
 
 
-% II. Compute motion vector
+target=path(public_vars.target_idx,:);
 
-public_vars.motion_vector = [0.5, 0.5];
+dist=norm(target-pose(1:2));
+
+if dist < 0.4
+    if public_vars.target_idx <size(path,1)
+        public_vars.target_idx = public_vars.target_idx +1 ;
+        target = path(public_vars.target_idx,:);
+    end
+end
+
+
+dx = target(1) - pose(1);
+dy = target(2) - pose(2);
+desired_theta = atan2(dy,dx);
+
+angle_error=desired_theta-pose(3);
+angle_error=atan2(sin(angle_error),cos(angle_error));
+
+v=0.4;
+k=1.5;
+
+vR=v+k*angle_error;
+vL=v-k*angle_error;
+
+max_vel=read_only_vars.agent_drive.max_vel;
+vR=max(min(vR,max_vel), -max_vel);
+vL=max(min(vL,max_vel), -max_vel);
+
+if abs(angle_error)>0.8
+    vR=0.35*sign(angle_error);
+    vL=-0.35*sign(angle_error);
+end
+
+public_vars.motion_vector=[vR,vL];
+
+
+% 
+% 
+% % I. Pick navigation target
+% 
+% target = get_target(public_vars.estimated_pose, public_vars.path);
+% 
+% 
+% % II. Compute motion vector
+% 
+% public_vars.motion_vector = [0.5, 0.5];
 
 
 end

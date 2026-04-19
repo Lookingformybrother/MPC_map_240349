@@ -1,14 +1,4 @@
 function [public_vars] = student_workspace(read_only_vars,public_vars)
-
-
-% 8. Perform initialization procedure
-if (read_only_vars.counter == 1)
-          
-    public_vars = init_particle_filter(read_only_vars, public_vars);
-    public_vars = init_kalman_filter(read_only_vars, public_vars);
-
-end
-
 %STUDENT_WORKSPACE Summary of this function goes here
 
 if isfield(public_vars, "kf")
@@ -29,26 +19,22 @@ if isfield(public_vars, "kf")
                 public_vars.kf.gnss_mean=gnss_mean;
                 public_vars.kf.gnss_cov=gnss_cov;
                 public_vars.kf.Q=gnss_cov;
-
-                
+                public_vars.kf.init_done=true;
                 public_vars.mu=[
-                    gnss_mean(1);
-                    gnss_mean(2);
+                    mu(1);
+                    mu(2);
                     0];
                 public_vars.sigma=[
-                    gnss_cov(1,1),  gnss_cov(1,2),  0;
-                    gnss_cov(2,1),  gnss_cov(2,2),  0;
-                    0               0,              10]; %nastavení velké nejistoty
-
-                public_vars.kf.init_done=true;
+                    gnss_cov(1,1), gnss_cov(1,2), 0;
+                    gnss_cov(2,1), gnss_cov(2,2), 0;
+                    0]
+        
 
                 disp("gnss init done")
                 disp("gnss: mean: ")
                 disp(gnss_mean)
                 disp("gnss: cov: ")
                 disp(gnss_cov)
-                disp("init sigma:")
-                disp(diag(public_vars.sigma)')
             end
         end
     end
@@ -68,7 +54,13 @@ end
 
 
 
+% 8. Perform initialization procedure
+if (read_only_vars.counter == 1)
+          
+    public_vars = init_particle_filter(read_only_vars, public_vars);
+    public_vars = init_kalman_filter(read_only_vars, public_vars);
 
+end
 
 % 9. Update particle filter
 public_vars.particles = update_particle_filter(read_only_vars, public_vars);
