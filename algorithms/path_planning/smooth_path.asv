@@ -6,9 +6,8 @@ new_path = old_path;
 
 X = old_path; 
 Y = new_path;
-%alpha = 0.01;
-alpha = 0.15; %jak moc se má držet cesty
-%beta = 0.01;
+alpha = 0.7;
+%alpha = 0.15; %jak moc se má držet cesty
 beta = 0.35; %jak moc má vyhlazovat
 tolerance = 1e-4;
 max_iterations = 500;
