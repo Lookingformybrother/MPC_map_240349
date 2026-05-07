@@ -1,5 +1,5 @@
 function [public_vars] = student_workspace(read_only_vars,public_vars)
-%STUDENT_WORKSPACE Summary of this function goes here
+
 
 % 8. Perform initialization procedure
 if (read_only_vars.counter == 1)
@@ -8,6 +8,67 @@ if (read_only_vars.counter == 1)
     public_vars = init_kalman_filter(read_only_vars, public_vars);
 
 end
+
+%STUDENT_WORKSPACE Summary of this function goes here
+
+if isfield(public_vars, "kf")
+    if isfield(public_vars.kf, "init_done")
+        if ~public_vars.kf.init_done
+            z = read_only_vars.gnss_position;
+            public_vars.kf.init_samples=[public_vars.kf.init_samples; z];
+            n=size(public_vars.kf.init_samples,1);
+
+            if mod(n,10) == 0
+                disp("Sample "+n+"/"+public_vars.kf.init_samples_needed)
+            end
+        
+            if n>= public_vars.kf.init_samples_needed
+                gnss_mean=mean(public_vars.kf.init_samples,1);
+                gnss_cov=cov(public_vars.kf.init_samples);
+        
+                public_vars.kf.gnss_mean=gnss_mean;
+                public_vars.kf.gnss_cov=gnss_cov;
+                public_vars.kf.Q=gnss_cov;
+
+                
+                public_vars.mu=[
+                    gnss_mean(1);
+                    gnss_mean(2);
+                    0];
+                public_vars.sigma=[
+                    gnss_cov(1,1),  gnss_cov(1,2),  0;
+                    gnss_cov(2,1),  gnss_cov(2,2),  0;
+                    0               0,              10]; %nastavení velké nejistoty
+
+                public_vars.kf.init_done=true;
+
+                disp("gnss init done")
+                disp("gnss: mean: ")
+                disp(gnss_mean)
+                disp("gnss: cov: ")
+                disp(gnss_cov)
+                disp("init sigma:")
+                disp(diag(public_vars.sigma)')
+            end
+        end
+    end
+end
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 % 9. Update particle filter
 public_vars.particles = update_particle_filter(read_only_vars, public_vars);
