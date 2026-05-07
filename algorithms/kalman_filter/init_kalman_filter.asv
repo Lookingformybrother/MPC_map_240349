@@ -20,7 +20,6 @@ public_vars.kf.init_samples = [];
 public_vars.kf.init_done=false;
 
 %public_vars.mu = [2;2;pi/2];
-public_vars.mu = [0;0;0];
 public_vars.sigma = zeros(3,3);
 
 disp("Inicializace sběru dat počáteční polohy")

@@ -6,7 +6,7 @@ C=kf.C;%měřící matice ( v prezentaci Ht)
 Q=kf.Q;%matice šumu GNSS
 
 S=C*sigma*C'+Q; %inovační kovariance
-K=sigma*C' *inv(S); %Kalman gain
+K=sigma*C'*inv(S); %Kalman gain
 
 
 innovation = z-C*mu; %rozdíl mezi skutečným měřeným GNSS a očekávaným odhadem GNSS
@@ -16,7 +16,7 @@ mu=mu+K*innovation;%korekce odhadu stavu
 
 I=eye(size(sigma));
 sigma=(I-K*C)*sigma; %korekce nejistoty
-sigma = (sigma+sigma')/2; %oprava numerických nepřesností ze zaokrouhlení
+sigma = (sigma+sigma')/2;
 
 
 
@@ -26,8 +26,8 @@ mu(3)=atan2(sin(mu(3)),cos(mu(3)));
 
 
 
-new_mu = mu;
-new_sigma = sigma;
+% new_mu = mu;
+% new_sigma = sigma;
 
 end
 

@@ -22,18 +22,25 @@ dt=read_only_vars.sampling_period;
 [mu,sigma]=ekf_predict(mu,sigma,u,public_vars.kf,dt);
 
 
+% u = [];
+% [mu, sigma] = ekf_predict(mu, sigma, u, public_vars.kf, read_only_vars.sampling_period);
+
 % II. Measurement
 z = read_only_vars.gnss_position(:);
-[mu, sigma] = kf_measure(mu, sigma, z, public_vars.kf);
-
 %debug
-    if mod(read_only_vars.counter,20)==0
-        disp("gnss:")
-        disp(z')
-        disp("mu:")
-        disp(mu')
-        disp("sigma:")
-        disp(diag(sigma)');
-    end
+if mod(read_only_vars.counter,20)==0
+    disp("gnss:")
+    disp()
+
+
+
+
+
+
+
+
+
+%[mu, sigma] = kf_measure(mu, sigma, z, public_vars.kf);
+
 end
 

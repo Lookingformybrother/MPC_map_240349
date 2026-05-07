@@ -1,7 +1,7 @@
 function [new_mu, new_sigma] = ekf_predict(mu, sigma, u, kf, sampling_period)
 %EKF_PREDICT Summary of this function goes here
-
-dt = sampling_period;
+%u = řízení
+%mu = stav
 
 x=mu(1);
 y=mu(2);
@@ -13,27 +13,28 @@ vL=u(2);
 L=0.2;
 
 v=(vR+vL)/2;
-omega=(vR-vL) / L;
+omega(vR-vL)/L;
 
 x_new =x+v*cos(theta)*dt;
 y_new=y+v*sin(theta)*dt;
 theta_new=theta+omega*dt;
 
 theta_new=atan2(sin(theta_new),cos(theta_new));
-new_mu=[x_new;y_new;theta_new]; %predikce stavu
+mu=[x_new;y_new;theta_new];
 
 %Jakobián
-G=[
-    1,0,-v*sin(theta)*dt;
-    0,1,v*cos(theta)*dt;
-    0,0,1];
+G=1,0,-v*sin(theta)*dt;
 
-%procesni šum
-R=kf.R;
 
-%nová predikovaná nejistota
-new_sigma=G*sigma*G'+R; %predikce nejistoty
+
+
+
+
+
+
+
+new_mu = mu;
+new_sigma = sigma;
 
 end
-
 
