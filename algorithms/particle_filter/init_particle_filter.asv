@@ -1,7 +1,7 @@
 function [public_vars] = init_particle_filter(read_only_vars, public_vars)
 %INIT_PARTICLE_FILTER Summary of this function goes here
 
-N=600;
+N=300;
 xmin=read_only_vars.map.limits(1);
 ymin=read_only_vars.map.limits(2);
 xmax=read_only_vars.map.limits(3);
@@ -19,9 +19,10 @@ for i=1:N
 end
 public_vars.particles=particles;
 public_vars.pf_enabled=1;
+disp("")
 
 
-%public_vars.particles = [];
+public_vars.particles = [];
 
 end
 
