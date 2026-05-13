@@ -118,7 +118,7 @@ while true
     % 7. Measure MoCap pose
     % WARNING: This sensor can be used for development and debug only.
     % Following line will be commented out in the final project evaluation!
-    read_only_vars.mocap_pose = mocap_measure(private_vars.agent_pose, read_only_vars.map.gnss_denied);
+    %read_only_vars.mocap_pose = mocap_measure(private_vars.agent_pose, read_only_vars.map.gnss_denied);
       
     % 8.-13. Student workspace
     public_vars = student_workspace(read_only_vars, public_vars);

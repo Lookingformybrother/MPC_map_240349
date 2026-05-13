@@ -2,22 +2,35 @@ function [path] = astar(read_only_vars, public_vars)
 %ASTAR Summary of this function goes here
 %grid = read_only_vars.discrete_map.map;
 
-raw_grid=read_only_vars.discrete_map.map;
-step= read_only_vars.map.discretization_step;
+raw_grid = read_only_vars.discrete_map.map;
+limits = read_only_vars.map.limits;
+step = read_only_vars.map.discretization_step;
 
-clearance_m = 0.2;
-inflate_radius_cells = ceil(clearance_m/step);
+% minimalni hard inflate - kvuli realne kolizi
+hard_clearance_m = 0.2;
+hard_inflate_cells = max(1, ceil(hard_clearance_m / step));
 
-grid = inflate_map(raw_grid,inflate_radius_cells);
+grid = inflate_map(raw_grid, hard_inflate_cells);
 
+% oblasti blizko zdi jsou drazsi, ale ne zakazane
+soft_clearance_m = 1.2;
+soft_radius_cells = ceil(soft_clearance_m / step);
+penalty_gain = 5.0;
 
+penalty_map = build_obstacle_penalty(raw_grid, soft_radius_cells, penalty_gain);
 
 disp("unique grid values:")
 disp(unique(grid(:))')
 
 limits = read_only_vars.map.limits;
 step = read_only_vars.map.discretization_step;
-goal_xy = read_only_vars.map.goal(:)';
+if isfield(public_vars, "project") && isfield(public_vars.project, "nav_goal") ...
+        && ~isempty(public_vars.project.nav_goal) ...
+        && all(isfinite(public_vars.project.nav_goal))
+    goal_xy = public_vars.project.nav_goal(:)';
+else
+    goal_xy = read_only_vars.map.goal(:)';
+end
 
 
 if isfield(public_vars, "estimated_pose") && ~isempty(public_vars.estimated_pose) && all(isfinite(public_vars.estimated_pose(1:2)))
@@ -97,7 +110,7 @@ while any(openSet(:))
             end
         end
 
-        tentativeG = gScore(cr,cc)+stepCost;
+        tentativeG = gScore(cr, cc) + stepCost + penalty_map(nr, nc);
         if ~openSet(nr,nc) || tentativeG <gScore(nr,nc)
             parentRow(nr,nc) = cr;
             parentCol(nr,nc)=cc;
